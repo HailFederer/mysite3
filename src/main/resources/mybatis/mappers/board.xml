@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<select id="writedList" parameterType="long" resultType="long">
+		<![CDATA[
+		select no 
+		  from board 
+		 where memberNo = #{userNo}
+		]]>
+	</select>
+	
+	<insert id="replyWrite" parameterType="boardvo">
+		<![CDATA[
+		insert 
+		  into board
+		values (seq_board.nextval, 
+				#{title}, 
+				#{content}, 
+				sysdate, 
+				0, 
+				#{groupNo}, 
+				#{parent}, 
+				#{orderNo}, 
+				#{depth}, 
+				#{memberNo})
+		]]>
+	</insert>
+	
+	<update id="orderNoUpdate" parameterType="map">
+		<![CDATA[
+		update board
+		   set orderNo = orderNo + 1
+		 where groupNo = #{groupNo}
+		   and orderNo > #{orderNo}
+		]]>
+	</update>
+	
+	<update id="hitCountUpdate" parameterType="long">
+		<![CDATA[
+		update board 
+		   set hit = hit+1 
+		 where no = #{no}
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+		delete 
+		  from board 
+		 where no in (select no 
+		 			   from board 
+		 		 start with no = #{no}
+		   connect by prior no = parent)
+		]]>
+	</delete>
+	
+	<update id="modify" parameterType="boardvo">
+		<![CDATA[
+		update board 
+		   set title = #{title}, 
+		   	   content = #{content} 
+		 where no = #{no}
+		]]>
+	</update>
+	
+	<select id="view" parameterType="long" resultType="boardvo">
+		<![CDATA[
+		select no, 
+		       title, 
+		       content, 
+		       reg_date, 
+		       hit, 
+		       groupNo, 
+		       parent, 
+		       orderNo,  
+		       depth,  
+		       memberNo 
+		  from board 
+		 where no = #{no}
+		]]>
+	</select>
+	
+	<insert id="write" parameterType="boardvo">
+		<![CDATA[
+		insert 
+		  into board
+		values (seq_board.nextval, 
+				#{title}, 
+				#{content}, 
+				sysdate, 
+				0, 
+				(select nvl(max(groupNo),0)+1 from board), 
+				0, 
+				0, 
+				0, 
+				#{memberNo})
+		]]>
+	</insert>
+	
+	<select id="verticalList" parameterType="map" resultType="int">
+		<![CDATA[
+		select count(*)
+		  from board
+		 where parent = (select data.parent
+		                   from (select *
+								   from board
+								  where groupNo = #{groupNo} 
+								    and orderNo < #{orderNo} 
+								    and depth = #{depth}
+							   order by orderNo desc) data
+						  where rownum = 1 )
+		   and orderNo > #{orderNo}
+		]]>
+	</select>
+	
+	<select id="siblingNum" parameterType="map" resultType="int">
+		<![CDATA[
+		select count(*) 
+		  from board 
+		 where parent = #{parent} 
+		   and orderNo > #{orderNo}
+		]]>
+	</select>
+	
+	<select id="replyNum" parameterType="long" resultType="int">
+		<![CDATA[
+		select count(*) 
+		  from board 
+		 where parent = #{parent}
+		]]>
+	</select>
+	
+	<select id="getDataCount" resultType="int">
+		<![CDATA[
+		select nvl(count(*),0)
+		  from board
+		]]>
+	</select>
+	
+	<select id="getList" parameterType="map" resultType="boardvo">
+		<![CDATA[
+		select *
+		  from (select rownum rnum, data.*
+				  from ( select b.no, 
+				  				b.title, 
+				  				b.content, 
+				  				to_char(b.reg_date,'YYYY-MM-DD') reg_date,
+				 				b.hit, 
+				  				b.groupNo, 
+				  				b.parent, 
+				  				b.orderNo, 
+				  				b.depth, 
+				  				b.memberNo, 
+				  				m.name 
+						   from board b, 
+				  				member m 
+						  where b.memberNo = m.no
+					   order by groupNo desc, 
+					   			orderNo asc ) data)
+		 where rnum >= #{start} 
+		   and rnum <= #{end}
+		]]>
+	</select>	
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
