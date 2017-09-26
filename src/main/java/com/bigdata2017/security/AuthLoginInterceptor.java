@@ -21,8 +21,7 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(
 			HttpServletRequest request, 
 			HttpServletResponse response, 
-			Object handler) 
-					throws Exception {
+			Object handler) throws Exception {
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");

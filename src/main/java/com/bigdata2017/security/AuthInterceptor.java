@@ -52,7 +52,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter{
 		String role = String.valueOf(auth.role());
 		String userRole = authUser.getRole();
 		
-		if(!userRole.equals(String.valueOf(Role.ADMIN)) && role == String.valueOf(Role.ADMIN)) {
+		if(!userRole.equals(String.valueOf(Role.ADMIN)) && role.equals(String.valueOf(Role.ADMIN))) {
 			return false;
 		}		
 		

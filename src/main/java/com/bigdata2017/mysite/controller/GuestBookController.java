@@ -32,8 +32,6 @@ public class GuestBookController {
 		return "guestbook/index-ajax";
 	}
 	
-	
-	
 	@RequestMapping(value="")
 	public String list(Model model) {
 		
@@ -56,7 +54,7 @@ public class GuestBookController {
 		return "redirect:/guestBook";
 	}
 	
-	/*@RequestMapping(value="/delete", method=RequestMethod.GET)
+	@RequestMapping(value="/delete", method=RequestMethod.GET)
 	public String delete(
 			@RequestParam(value="no", required=true, defaultValue="") Long no,
 			Model model) {
@@ -64,7 +62,7 @@ public class GuestBookController {
 		model.addAttribute("no", no);
 		
 		return "guestbook/deleteform";
-	}*/
+	}
 	
 	@RequestMapping(value="/delete", method={RequestMethod.POST})
 	public String delete(@ModelAttribute GuestBookVO guestBookVO) {
