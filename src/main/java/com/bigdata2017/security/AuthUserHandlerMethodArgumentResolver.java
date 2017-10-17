@@ -10,6 +10,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.bigdata2017.mysite.vo.BoardVO;
 import com.bigdata2017.mysite.vo.UserVO;
 
 public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
@@ -32,7 +33,7 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 		if(session == null) {
 			return null;
 		}
-
+		
 		UserVO authUser = (UserVO)session.getAttribute( "authUser" );
 		return authUser;
 	}

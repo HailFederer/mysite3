@@ -36,7 +36,6 @@ public class BoardController {
 			@ModelAttribute BoardVO boardVO,
 			@AuthUser UserVO authUser
 			) {
-		
 		boardVO.setMemberNo(authUser.getNo());
 		boardService.write(boardVO);
 		
@@ -46,9 +45,8 @@ public class BoardController {
 	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.GET)
 	public String write(
-			@RequestParam(value="pageNo", required=false) int pageNo,
+			@RequestParam(value="pageNo", required=false, defaultValue="") String pageNo,
 			Model model) {
-		
 		model.addAttribute("pageNo", pageNo);
 		
 		return "board/write";
@@ -59,7 +57,6 @@ public class BoardController {
 			@RequestParam(value="boardNo", required=false) Long boardNo,
 			@RequestParam(value="pageNo", required=false) int pageNo
 			) {
-		
 		boardService.delete(boardNo);
 		
 		return "redirect:/board?pageNo="+pageNo;
@@ -182,7 +179,7 @@ public class BoardController {
 	    String contextPath = attr.getRequest().getContextPath();
 		MyUtil myUtil = new MyUtil();
 		
-		int numPerPage = 5;
+		int numPerPage = 30;
 		int totalPage = 0;
 		int totalDataCount = 0;
 		
