@@ -6,6 +6,7 @@ insert into gallery values(seq_gallery.nextval, '마리3', '12345');
 insert into gallery values(seq_gallery.nextval, '박보영2', '/bigdata/workspace/mysite3/gallery/images/201738185153388.jpg');
 
 delete from gallery;
+delete from gallery;
 
 drop sequence seq_gallery;
 create sequence seq_gallery
